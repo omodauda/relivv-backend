@@ -1,11 +1,18 @@
+import regeneratorRuntime from "regenerator-runtime";
 import express from 'express';
 import mongoose from 'mongoose';
 
 import config from './config'
 
+import {auth} from './routes'
+
 const app = express();
 
 app.use(express.json());
+
+
+
+
 
 app.use((err, req, res, next) => {
     res.status(400).json({
@@ -14,7 +21,7 @@ app.use((err, req, res, next) => {
     });
 });
 
-
+app.use('/api/v1/users', auth);
 
 
 const DB_URL = config.databaseUrl[config.environment];

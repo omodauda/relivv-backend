@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 const schema = mongoose.Schema;
-import {profileSchema} from './profile';
 
 const authSchema = new schema({
 
@@ -41,7 +40,6 @@ const authSchema = new schema({
         default: "user",
         enum: ["user", "volunteer", "admin"]
     },
-    profile: profileSchema
     
 }, {timestamps: true});
 

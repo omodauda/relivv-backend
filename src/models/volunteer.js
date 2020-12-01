@@ -1,9 +1,13 @@
 import mongoose from 'mongoose';
 const schema = mongoose.Schema;
-import {Profile} from './profile';
+import Profile from './profile';
 
 const Volunteer = Profile.discriminator('Volunteer', new schema({
 
+    authId: {
+        type: schema.Types.ObjectId,
+        ref: "Auth"
+    },
     first_name: {
         type: String,
         required: true,
@@ -47,6 +51,6 @@ const Volunteer = Profile.discriminator('Volunteer', new schema({
     certificate: {
         type: String
     }
-}, {timestamps: true}));
+}));
 
 export default Volunteer;

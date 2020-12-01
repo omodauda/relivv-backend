@@ -1,9 +1,13 @@
 import mongoose from 'mongoose';
 const schema = mongoose.Schema;
-import {Profile} from './profile';
+import Profile from './profile';
 
 const User = Profile.discriminator('User', new schema({
 
+    authId: {
+        type: schema.Types.ObjectId,
+        ref: "Auth"
+    },
     avatar: {
         image:{
             type: String
@@ -27,6 +31,6 @@ const User = Profile.discriminator('User', new schema({
         required: true
     }
 
-}, {timestamps: true}));
+},));
 
 export default User;
