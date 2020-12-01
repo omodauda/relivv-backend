@@ -1,0 +1,13 @@
+.env
+
+*.key
+*.key.pub
+
+package-lock.json
+/node_modules
+
+/lib
+/public
+/docs
+/build
+/built
