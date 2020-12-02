@@ -70,7 +70,10 @@ const registerUser = async(req, res) => {
 
 const registerVolunteer = async(req, res) => {
     try{
-        const {username, email, password, first_name, last_name, phone} = req.body;
+        const {
+            username, email, password, first_name, last_name, designation,
+            gender, experience_year, professional_career, education_level, phone
+        } = req.body;
 
         const newUser = new Auth({
             method: "local",
@@ -88,6 +91,11 @@ const registerVolunteer = async(req, res) => {
             authId: newUser.id,
             first_name,
             last_name,
+            designation,
+            gender,
+            experience_year,
+            professional_career,
+            education_level,
             phone
         });
 

@@ -4,15 +4,17 @@ import passport from 'passport';
 import passportConf from '../passport';
 const passportLogin = passport.authenticate('local', {session: false});
 
+import {validateBody, schemas} from '../validators';
+
 import {registerUser, registerVolunteer, verifyUser} from '../controllers/auth'
 
 router
     .route('/register/user')
-    .post(registerUser)
+    .post(validateBody(schemas.userSchema), registerUser)
 
 router
     .route('/register/volunteer')
-    .post(registerVolunteer)
+    .post(validateBody(schemas.volunteerSchema), registerVolunteer)
 
 router
     .route('/verify/:email')
