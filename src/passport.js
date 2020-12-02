@@ -1,7 +1,8 @@
 import passport from 'passport';
-import {Strategy} from 'passport-jwt'
-import {ExtractJwt} from 'passport-jwt'
-import {Strategy as LocalStrategy} from 'passport-local'
+import {Strategy as JwtStrategy} from 'passport-jwt';
+import {ExtractJwt} from 'passport-jwt';
+import {Strategy as LocalStrategy} from 'passport-local';
+import {Strategy as GoogleStrategy} from 'passport-google-token';
 import { async } from 'regenerator-runtime';
 import Auth from './models/auth';
 
@@ -32,4 +33,20 @@ passport.use(new LocalStrategy(
             return done(error, false);
         }
     }
-))
+));
+
+//Google strategy
+passport.use(
+    "google",
+    new GoogleStrategy({
+        clientID: '',
+        clientSecret: ''
+    },
+    async(accessToken, refreshToken, profile, done) => {
+        try{
+            console.log(profile)
+        }catch(error){
+            return done(error, false);
+        }
+    })
+)
