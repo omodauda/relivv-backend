@@ -5,6 +5,9 @@ import Volunteer from '../models/volunteer';
 import config from '../config';
 
 import JWT from 'jsonwebtoken';
+
+//utils
+import {sendVerificationEmail} from '../utils/email';
 import { async } from 'regenerator-runtime';
 
 //sign user with token
@@ -14,9 +17,10 @@ const signToken = (user) => {
         sub: user.id,
         role: user.role,
         iat: new Date().getTime(),
-        exp: new Date().setDate(new Date().getDate() + 10)
+        // exp: new Date().setDate(new Date().getDate() + 10)
     },
-    config.jwtSecret
+    config.jwtSecret,
+    {expiresIn: '10d'}
     );
 };
 
@@ -45,8 +49,8 @@ const registerUser = async(req, res) => {
 
         await profile.save();
 
-        //sign auth token
-        // const token = signToken(newUser);
+        //send verification link
+        await sendVerificationEmail(newUser.local.email);
 
         res
         .status(201)
@@ -89,8 +93,8 @@ const registerVolunteer = async(req, res) => {
 
         await profile.save();
 
-        //sign auth token
-        // const token = signToken(newUser);
+        //send verification link
+        await sendVerificationEmail(newUser.local.email);
 
         res
         .status(201)
@@ -106,7 +110,63 @@ const registerVolunteer = async(req, res) => {
             error: error.message
         })
     }
+};
+
+const verifyUser = async(req, res) => {
+    try{
+        const {email} = req.params;
+        const user = await Auth.findOne({$or: [{'local.email': email}, {'google.email': email}]});
+        
+        if(!user){
+            return res
+            .status(400)
+            .json({
+                status: "fail",
+                message: `user with email ${email} not registered`
+            })
+        }
+
+        await Auth.findByIdAndUpdate(user.id, {is_verified: true});
+
+        res
+        .status(200)
+        .json({
+            status: 'success',
+            message: "user verification successful!"
+        })
+    }catch(error){
+        res
+        .status(400)
+        .json({
+            status: "fail",
+            error: error.message
+        })
+    }
 }
 
+// const login = async(req, res) => {
+   
+//     try{
+//         const {local: {email}, role, id} = req.user;
 
-export {registerUser, registerVolunteer}
+//         let profile;
+
+//         if(role === 'User'){
+//             profile = await User.findOne({authId: id})
+//         }else if(role === 'Volunteer'){
+//             profile = await Volunteer.findOne({authId: id});
+//         }
+
+//         console.log(profile);
+//     }catch(error){
+//         res
+//         .status(400)
+//         .json({
+//             status: "fail",
+//             error: error.message
+//         })
+//     }
+// }
+
+
+export {registerUser, registerVolunteer, verifyUser}
