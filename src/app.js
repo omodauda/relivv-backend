@@ -9,19 +9,18 @@ import {auth} from './routes'
 const app = express();
 
 app.use(express.json());
+app.use(express.urlencoded({extended: false}))
 
 
-
+app.use('/api/v1/users', auth);
 
 
 app.use((err, req, res, next) => {
-    res.status(400).json({
+    res.status(500).json({
       status: 'fail',
       error: err.message
     });
 });
-
-app.use('/api/v1/users', auth);
 
 
 const DB_URL = config.databaseUrl[config.environment];

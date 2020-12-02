@@ -42,6 +42,10 @@ const authSchema = new schema({
         default: "User",
         enum: ["User", "Volunteer", "Admin"]
     },
+    is_verified: {
+        type: Boolean,
+        default: false
+    }
     
 }, {timestamps: true});
 
@@ -63,6 +67,16 @@ authSchema.pre('save', async function(next){
         next(error)
     }
 });
+
+//checks if password is valid on login
+authSchema.methods.isValidPassword = async function (password){
+    try{
+        return await bcrypt.compare(password, this.local.password);
+    }
+    catch(error){
+        throw new Error(error);
+    }
+};
 
 const Auth = mongoose.model('Auth', authSchema);
 
