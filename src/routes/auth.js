@@ -11,7 +11,8 @@ import {
     registerUser, 
     registerVolunteer, 
     verifyUser,
-    googleOauth
+    googleOauth,
+    login
 } from '../controllers/auth'
 
 router
@@ -30,9 +31,9 @@ router
     .route('/auth/google')
     .post(passportGoogle, googleOauth)
 
-// router
-//     .route('/login')
-//     .post(passportLogin, login)
+router
+    .route('/login')
+    .post(validateBody(schemas.loginSchema), passportLogin, login)
 
 
 

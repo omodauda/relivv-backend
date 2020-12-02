@@ -10,9 +10,7 @@ const validateBody = (schema) => {
             .status(400)
             .json({
                 status: 'fail',
-                error: {
-                message: errorMessage
-                }
+                error: errorMessage
             });
         }
         if (!req.value) { req.value = {}; }
@@ -42,6 +40,10 @@ const schemas = {
         professional_career: Joi.string().required(),
         education_level: Joi.string().required(),
         phone: Joi.string().required()
+    }),
+    loginSchema: Joi.object().keys({
+        email: Joi.string().email().required(),
+        password: Joi.string().required()
     })
 }
 

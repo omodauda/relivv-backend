@@ -192,9 +192,9 @@ const googleOauth = async(req, res) => {
         let profile;
 
         if(role === 'Volunteer'){
-            profile = await Volunteer.findOne({authId: id }).select('-authId');
+            profile = await Volunteer.findOne({authId: id }).select('-authId -__v');
         } else{
-            profile = await User.findOne({authId: id}).select('-authId')
+            profile = await User.findOne({authId: id}).select('-authId -__v')
         }
 
         const token = signToken(req.user);
@@ -218,29 +218,45 @@ const googleOauth = async(req, res) => {
     }
 };
 
-// const login = async(req, res) => {
+const login = async(req, res) => {
    
-//     try{
-//         const {local: {email}, role, id} = req.user;
+    try{
+        const {local: {email}, role, id} = req.user;
 
-//         let profile;
+        let profile;
 
-//         if(role === 'User'){
-//             profile = await User.findOne({authId: id})
-//         }else if(role === 'Volunteer'){
-//             profile = await Volunteer.findOne({authId: id});
-//         }
+        if(role === 'User'){
+            profile = await User.findOne({authId: id}).select('-authId -__v')
+        }else if(role === 'Volunteer'){
+            profile = await Volunteer.findOne({authId: id}).select('-authId -__v');
+        }
 
-//         console.log(profile);
-//     }catch(error){
-//         res
-//         .status(400)
-//         .json({
-//             status: "fail",
-//             error: error.message
-//         })
-//     }
-// }
+        const token = signToken(req.user);
+        res
+        .status(200)
+        .json({
+            status: 'success',
+            message: "login successful",
+            data: {
+                token,
+                profile
+            }
+        })
+    }catch(error){
+        res
+        .status(400)
+        .json({
+            status: "fail",
+            error: error.message
+        })
+    }
+}
 
 
-export {registerUser, registerVolunteer, verifyUser, googleOauth}
+export {
+    registerUser, 
+    registerVolunteer, 
+    verifyUser, 
+    googleOauth,
+    login
+}
