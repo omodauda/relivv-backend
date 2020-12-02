@@ -5,8 +5,8 @@ import bcrypt from 'bcryptjs';
 
 const authSchema = new schema({
 
-    method: {
-        type: String,
+    methods: {
+        type: [String],
         required: true,
         enum: ["local", "google"]
     },
@@ -53,7 +53,7 @@ const authSchema = new schema({
 authSchema.pre('save', async function(next){
     try{
         //check if register method is local
-        if(this.method !== 'local'){
+        if(!this.methods.includes('local')){
             next();
         }
         //Generate salt

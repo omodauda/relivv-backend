@@ -52,15 +52,29 @@ passport.use(
             //details from google
             const {id, email, verified_email, given_name: first_name, family_name: last_name, picture} = profile._json;
 
-            //check if user already exist. If yes, return the user
+            //check if user with same gmail already exist. If yes, return the user
             const existingUser = await Auth.findOne({'google.id': id});
             if(existingUser){
                 return done(null, existingUser)
             }
 
+            //check if user has signed up locally before
+            const foundUser = await Auth.findOne({'local.email': email});
+
+            if(foundUser){
+                //merge google data with local auth
+                foundUser.methods.push('google');
+                foundUser.google = {
+                    id,
+                    email
+                };
+                await foundUser.save();
+                return done(null, foundUser)
+            };
+
             //create user object
             const user = new Auth({
-                method: 'google',
+                methods: ['google'],
                 google: {
                     id,
                     email

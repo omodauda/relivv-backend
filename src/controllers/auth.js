@@ -28,8 +28,41 @@ const registerUser = async(req, res) => {
     try{
         const {username, email, password, role, first_name, last_name, phone} = req.body;
 
+        //check if there's a user with same email
+        let foundUser = await Auth.findOne({'local.email': email});
+        if(foundUser){
+            return res
+            .status(403)
+            .json({
+                status: "fail",
+                message: `Email ${email} already in use`
+            });
+        }
+
+        //check if there's a Google account with same email
+        foundUser = await Auth.findOne({'google.email': email});
+
+        if(foundUser){
+            //merge them
+            foundUser.methods.push('local');
+            foundUser.local = {
+                username,
+                email,
+                password
+            }
+
+            await foundUser.save();
+
+            return res
+            .status(201)
+            .json({
+                status: "success",
+                message: "user successfully created"
+            })
+        };
+
         const newUser = new Auth({
-            method: "local",
+            methods: ["local"],
             local: {
                 username,
                 email,
@@ -76,7 +109,7 @@ const registerVolunteer = async(req, res) => {
         } = req.body;
 
         const newUser = new Auth({
-            method: "local",
+            methods: ["local"],
             local: {
                 username,
                 email,
@@ -154,8 +187,15 @@ const verifyUser = async(req, res) => {
 
 const googleOauth = async(req, res) => {
     try{
-        const {id, is_verified} = req.user;
-        const profile = await User.findOne({authId: id }).select('-authId');
+        const {id, role, is_verified} = req.user;
+
+        let profile;
+
+        if(role === 'Volunteer'){
+            profile = await Volunteer.findOne({authId: id }).select('-authId');
+        } else{
+            profile = await User.findOne({authId: id}).select('-authId')
+        }
 
         const token = signToken(req.user);
         res
