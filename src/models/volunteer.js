@@ -28,11 +28,11 @@ const Volunteer = Profile.discriminator('Volunteer', new schema({
     },
     designation: {
         type: String,
-        required: true
+        // required: true
     },
     gender: {
         type: String,
-        required: true,
+        // required: true,
         enum: ["Male", "Female", "Others"]
     },
     phone: {
