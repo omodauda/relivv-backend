@@ -25,7 +25,7 @@ const schemas = {
     userSchema: Joi.object().keys({
         first_name: Joi.string().required(),
         last_name: Joi.string().required(),
-        phone: Joi.string().required()
+        phone: Joi.string()
     }),
     volunteerSchema: Joi.object().keys({
         first_name: Joi.string().required(),

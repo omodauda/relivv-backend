@@ -150,7 +150,33 @@ const verifyUser = async(req, res) => {
             error: error.message
         })
     }
-}
+};
+
+const googleOauth = async(req, res) => {
+    try{
+        const {id, is_verified} = req.user;
+        const profile = await User.findOne({authId: id }).select('-authId');
+
+        const token = signToken(req.user);
+        res
+        .status(201)
+        .json({
+            status: "success",
+            message: `${is_verified ? "" : "A verification link has been sent to your gmail, please verify your account"}`,
+            data:{
+                token,
+                profile
+            }
+        })
+    }catch(error){
+        res
+        .status(400)
+        .json({
+            status: "fail",
+            error: error.message
+        })
+    }
+};
 
 // const login = async(req, res) => {
    
@@ -177,4 +203,4 @@ const verifyUser = async(req, res) => {
 // }
 
 
-export {registerUser, registerVolunteer, verifyUser}
+export {registerUser, registerVolunteer, verifyUser, googleOauth}

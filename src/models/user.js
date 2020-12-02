@@ -27,8 +27,7 @@ const User = Profile.discriminator('User', new schema({
         trim: true
     },
     phone: {
-        type: String,
-        required: true
+        type: String
     }
 
 },));
