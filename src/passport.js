@@ -20,8 +20,6 @@ passport.use(new LocalStrategy(
         try{
             const user = await Auth.findOne({'local.email': email});
 
-            // const user = await Auth.findOne({$or: [{'local.email': email}, {'local.username': username}]});
-
             if(!user){
                 return done(new Error('Invalid email'), false);
             }

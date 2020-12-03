@@ -26,7 +26,7 @@ const signToken = (user) => {
 
 const registerUser = async(req, res) => {
     try{
-        const {username, email, password, role, first_name, last_name, phone} = req.body;
+        const {email, password, role, first_name, last_name, phone} = req.body;
 
         //check if there's a user with same email
         let foundUser = await Auth.findOne({'local.email': email});
@@ -46,7 +46,6 @@ const registerUser = async(req, res) => {
             //merge them
             foundUser.methods.push('local');
             foundUser.local = {
-                username,
                 email,
                 password
             }
@@ -64,7 +63,6 @@ const registerUser = async(req, res) => {
         const newUser = new Auth({
             methods: ["local"],
             local: {
-                username,
                 email,
                 password
             },
@@ -104,14 +102,13 @@ const registerUser = async(req, res) => {
 const registerVolunteer = async(req, res) => {
     try{
         const {
-            username, email, password, first_name, last_name, designation,
+            email, password, first_name, last_name, designation,
             gender, experience_year, professional_career, education_level, phone
         } = req.body;
 
         const newUser = new Auth({
             methods: ["local"],
             local: {
-                username,
                 email,
                 password
             },

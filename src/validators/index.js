@@ -1,5 +1,4 @@
 import Joi from 'joi';
-import userSchema from './user';
 
 const validateBody = (schema) => {
     return (req, res, next) => {
@@ -21,7 +20,6 @@ const validateBody = (schema) => {
 
 const schemas = {
     userSchema: Joi.object().keys({
-        username: Joi.string().required(),
         email: Joi.string().email().required(),
         password: Joi.string().required(),
         first_name: Joi.string().required(),
@@ -29,7 +27,6 @@ const schemas = {
         phone: Joi.string()
     }),
     volunteerSchema: Joi.object().keys({
-        username: Joi.string().required(),
         email: Joi.string().email().required(),
         password: Joi.string().required(),
         first_name: Joi.string().required(),

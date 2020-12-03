@@ -11,11 +11,6 @@ const authSchema = new schema({
         enum: ["local", "google"]
     },
     local:{
-        username: {
-            type: String,
-            unique: true,
-            trim: true
-        },
         email: {
             type: String,
             unique: true,
