@@ -18,10 +18,22 @@ const uploadFile = async(file) => {
     );
     const {public_id, secure_url} = uploadedFile;
     return {public_id, secure_url};
-}
+};
+
+const uploadImage = async(image, id) => {
+    const uploadedImage = await cloudinary.uploader.upload(image.path,
+        {
+            folder: 'relivv/users/profile_images',
+            public_id: `userid=${id}`
+        }
+    );
+    const {public_id, secure_url} = uploadedImage;
+    return {public_id, secure_url};
+};
 
 export {
     cloudinary,
-    uploadFile
+    uploadFile,
+    uploadImage
 }
 
