@@ -9,7 +9,19 @@ cloudinary.config({
     api_secret: config.cloudinary_api_secret[config.environment]
 });
 
+const uploadFile = async(file) => {
+    const uploadedFile = await cloudinary.uploader.upload(file.path,
+        {
+            resource_type: 'auto',
+            folder: 'relivv/volunteers/certification'
+        }
+    );
+    const {public_id, secure_url} = uploadedFile;
+    return {public_id, secure_url};
+}
+
 export {
-    cloudinary
+    cloudinary,
+    uploadFile
 }
 
