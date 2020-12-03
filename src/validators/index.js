@@ -41,6 +41,11 @@ const schemas = {
     loginSchema: Joi.object().keys({
         email: Joi.string().email().required(),
         password: Joi.string().required()
+    }),
+    updateProfileSchema: Joi.object().keys({
+        first_name: Joi.string(),
+        last_name: Joi.string(),
+        phone: Joi.string(),
     })
 }
 
