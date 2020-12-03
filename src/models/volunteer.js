@@ -8,6 +8,11 @@ const Volunteer = Profile.discriminator('Volunteer', new schema({
         type: schema.Types.ObjectId,
         ref: "Auth"
     },
+    status:{
+        type: String,
+        default: 'Reviewing',
+        enum: ["Reviewing", "Accepted", "Declined"]
+    },
     first_name: {
         type: String,
         required: true,
