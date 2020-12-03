@@ -6,6 +6,7 @@ const passportLogin = passport.authenticate('local', {session: false});
 const passportGoogle = passport.authenticate('google', {session: false});
 
 import {validateBody, schemas} from '../validators';
+import upload from '../utils/multer';
 
 import {
     registerUser, 
@@ -21,7 +22,7 @@ router
 
 router
     .route('/register/volunteer')
-    .post(validateBody(schemas.volunteerSchema), registerVolunteer)
+    .post(upload.single('file'), registerVolunteer)
 
 router
     .route('/verify/:email')

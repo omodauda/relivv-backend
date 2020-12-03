@@ -8,6 +8,7 @@ import JWT from 'jsonwebtoken';
 
 //utils
 import {sendVerificationEmail} from '../utils/email';
+import {uploadFile} from '../utils/cloudinary';
 import { async } from 'regenerator-runtime';
 
 //sign user with token
@@ -101,10 +102,37 @@ const registerUser = async(req, res) => {
 
 const registerVolunteer = async(req, res) => {
     try{
+
+        //return if no file selected
+        if (!req.file){
+            return res
+            .status(400)
+            .json({
+                status: 'fail',
+                error: 'volunteer must provide a certification'
+            });
+        };
+
         const {
             email, password, first_name, last_name, designation,
             gender, experience_year, professional_career, education_level, phone
         } = req.body;
+
+        //check if there's a user with same email
+        let foundUser = await Auth.findOne({'local.email': email});
+        if(foundUser){
+            return res
+            .status(403)
+            .json({
+                status: "fail",
+                message: `Email ${email} already in use`
+            });
+        };
+
+        //new volunteer
+            //upload certificate to cloudinary
+        const file = await  uploadFile(req.file);
+        const {public_id, secure_url} = file;
 
         const newUser = new Auth({
             methods: ["local"],
@@ -126,6 +154,10 @@ const registerVolunteer = async(req, res) => {
             experience_year,
             professional_career,
             education_level,
+            certificate: {
+                url: secure_url,
+                public_id
+            },
             phone
         });
 
