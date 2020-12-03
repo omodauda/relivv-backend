@@ -57,7 +57,12 @@ const Volunteer = Profile.discriminator('Volunteer', new schema({
         required: true
     },
     certificate: {
-        type: String
+        url:{
+            type: String
+        },
+        public_id: {
+            type: String
+        }
     }
 }));
 
