@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 
 import config from './config'
 
-import {auth, admin} from './routes'
+import {auth, admin, profile} from './routes'
 
 const app = express();
 
@@ -14,6 +14,7 @@ app.use(express.urlencoded({extended: false}))
 
 app.use('/api/v1/users', auth);
 app.use('/api/v1/admin', admin);
+app.use('/api/v1/users/profile', profile);
 
 
 app.use((err, req, res, next) => {
