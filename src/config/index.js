@@ -19,6 +19,10 @@ export default {
     },
 
     jwtSecret: process.env.JWT_SECRET,
+    nodemailer_email: process.env.NODEMAILER_EMAIL,
+    nodemailer_password: process.env.NODEMAILER_PASSWORD,
+    clientID: process.env.clientID,
+    clientSecret: process.env.clientSecret,
     development: process.env.NODE_ENV === 'development',
     production: process.env.NODE_ENV === 'production',
     test: process.env.NODE_ENV === 'test'
