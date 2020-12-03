@@ -11,6 +11,27 @@ import config from './config';
 import {sendVerificationEmail} from './utils/email';
 
 
+passport.use(new JwtStrategy(
+    {
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        secretOrKey: config.jwtSecret
+    },
+    async(payload, done) => {
+        //find user specified in token
+        try{
+            const user = await Auth.findById(payload.sub);
+            //if !user return
+            if(!user){
+                return done(null, false);
+            }
+            //if user, send user
+            done(null, user)
+        }catch(error){
+            return done(new Error('Unauthorized to perform this action'), false)
+        }
+    }
+));
+
 //local strategy
 passport.use(new LocalStrategy(
     {
