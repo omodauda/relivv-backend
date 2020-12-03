@@ -23,6 +23,18 @@ export default {
     nodemailer_password: process.env.NODEMAILER_PASSWORD,
     clientID: process.env.clientID,
     clientSecret: process.env.clientSecret,
+    cloudinary_cloud_name: {
+        development: process.env.DEV_CLOUDINARY_CLOUD_NAME,
+        production: process.env.PROD_CLOUDINARY_CLOUD_NAME
+    },
+    cloudinary_api_key: {
+        development: process.env.DEV_CLOUDINARY_API_KEY,
+        production: process.env.PROD_CLOUDINARY_API_KEY
+    },
+    cloudinary_api_secret: {
+        development: process.env.DEV_CLOUDINARY_API_SECRET,
+        production: process.env.PROD_CLOUDINARY_API_SECRET
+    },
     development: process.env.NODE_ENV === 'development',
     production: process.env.NODE_ENV === 'production',
     test: process.env.NODE_ENV === 'test'
