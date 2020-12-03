@@ -11,6 +11,15 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: false}))
 
+app.get('/api/v1', (req, res) => {
+  res
+  .status(200)
+  .json({
+    status: 'success',
+    message: "Welcome to Relivv App API v1"
+  })
+});
+
 
 app.use('/api/v1/users', auth);
 
