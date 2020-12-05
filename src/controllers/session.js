@@ -59,65 +59,65 @@ const bookSession = async(req, res) => {
     }
 };
 
-// const assignVolunteer = async(req, res) => {
+const assignVolunteer = async(req, res) => {
 
-//     try{
-//         //session id
-//         const {id} = req.params;
-//         //id of volunteer to assign to session
-//         const {volunteer_id} = req.body;
+    try{
+        //session id
+        const {id} = req.params;
+        //id of volunteer to assign to session
+        const {volunteer_id} = req.body;
 
-//         //check if session exist
-//         const session = await Session.findById(id);
-//         if(!session){
-//             return res
-//             .status(400)
-//             .json({
-//                 status: 'fail',
-//                 error: `No session with id ${id}` 
-//             })
-//         }
-//         //check volunteer
-//         const volunteer = await Volunteer.findById(volunteer_id);
-//         if(!volunteer){
-//             return res
-//             .status(400)
-//             .json({
-//                 status: 'fail',
-//                 error: 'volunteer not found in record'
-//             })
-//         }
+        //check if session exist
+        const session = await Session.findById(id);
+        if(!session){
+            return res
+            .status(400)
+            .json({
+                status: 'fail',
+                error: `No session with id ${id}` 
+            })
+        }
+        //check volunteer
+        const volunteer = await Volunteer.findById(volunteer_id);
+        if(!volunteer){
+            return res
+            .status(400)
+            .json({
+                status: 'fail',
+                error: 'volunteer not found in record'
+            })
+        }
 
-//         /* 
-//             if session & volunteer are in db,
-//             assign volunteer id to session.volunteer &
-//             ref session in volunteer's sessions list
-//         */
-//         session.volunteer = volunteer.id;
-//         await session.save();
+        /* 
+            if session & volunteer are in db,
+            assign volunteer id to session.volunteer &
+            ref session in volunteer's sessions list
+        */
+        session.volunteer = volunteer.id;
+        await session.save();
 
-//         volunteer.sessions.push(session.id);
-//         await volunteer.save();
+        volunteer.sessions.push(session.id);
+        await volunteer.save();
 
-//         res
-//         .status(200)
-//         .json({
-//             status: 'success',
-//             message: "volunteer successfully assigned to session"
-//         });
+        res
+        .status(200)
+        .json({
+            status: 'success',
+            message: "volunteer successfully assigned to session"
+        });
 
 
-//     }catch(error){
-//         res
-//         .status(400)
-//         .json({
-//             status: "fail",
-//             error: error.message
-//         })
-//     }
-// }
+    }catch(error){
+        res
+        .status(400)
+        .json({
+            status: "fail",
+            error: error.message
+        })
+    }
+}
 
 export {
     bookSession,
-    // assignVolunteer
+    assignVolunteer
 };

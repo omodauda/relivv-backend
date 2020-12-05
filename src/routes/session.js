@@ -6,16 +6,16 @@ const passportJWT = passport.authenticate('jwt', {session: false});
 
 import {
     bookSession,
-    // assignVolunteer
+    assignVolunteer
 } from '../controllers/session';
 
 router
     .route('/book')
     .post(passportJWT, bookSession)
 
-// router
-//     .route('/:id/assign-volunteer')
-//     .patch(assignVolunteer)
+router
+    .route('/:id/assign-volunteer')
+    .patch(assignVolunteer)
 
 
 
