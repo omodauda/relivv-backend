@@ -10,19 +10,20 @@ import {
     volunteerResponse
 } from '../controllers/session';
 
-import {accessControl} from '../middlewares/index';
+import {accessControl} from '../middlewares';
+import {validateBody, schemas} from '../validators';
 
 router
     .route('/book')
-    .post(passportJWT, bookSession)
+    .post(validateBody(schemas.bookSessionSchema), passportJWT, bookSession)
 
 router
     .route('/:id/assign-volunteer')
-    .patch(assignVolunteer)
+    .patch(validateBody(schemas.assignVolunteer), assignVolunteer)
 
 router
     .route('/:id/volunteer-response')
-    .patch(passportJWT, accessControl("Volunteer"), volunteerResponse)
+    .patch(validateBody(schemas.volunteerResponseSchema), passportJWT, accessControl("Volunteer"), volunteerResponse)
 
 
 
