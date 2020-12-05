@@ -63,7 +63,11 @@ const Volunteer = Profile.discriminator('Volunteer', new schema({
         public_id: {
             type: String
         }
-    }
+    },
+    sessions: [{
+        type: schema.Types.ObjectId,
+        ref: 'Session'
+    }]
 }));
 
 export default Volunteer;

@@ -28,7 +28,11 @@ const User = Profile.discriminator('User', new schema({
     },
     phone: {
         type: String
-    }
+    },
+    sessions: [{
+        type: schema.Types.ObjectId,
+        ref: 'Session'
+    }]
 
 },));
 
