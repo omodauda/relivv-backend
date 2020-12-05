@@ -74,7 +74,7 @@ const assignVolunteer = async(req, res) => {
             .status(400)
             .json({
                 status: 'fail',
-                error: `No session with id ${id}` 
+                error: `No session with id ${id} in record` 
             })
         }
         //check volunteer
@@ -115,9 +115,70 @@ const assignVolunteer = async(req, res) => {
             error: error.message
         })
     }
-}
+};
+
+const volunteerResponse = async(req, res) => {
+    try{
+        //session id
+        const {id} = req.params;
+        //volunteer's response
+        const {status, message} = req.body;
+
+        //get session
+        const session = await Session.findById(id);
+        if(!session){
+            return res
+            .status(400)
+            .json({
+                status: 'fail',
+                message: `No session with id ${id} in record`
+            })
+        }
+
+        /* 
+            the volunteer assigned to session should be the one
+            to respond to session
+        */
+        const volunteer = await Volunteer.findOne({authId: req.user.id});
+
+        if(session.volunteer != volunteer.id){
+            return res
+            .status(400)
+            .json({
+                status: 'fail',
+                message: "You don't have permission to perform this operation"
+            })
+        }
+
+        //update session's volunteer response
+        session.volunteer_response = {
+            status,
+            message
+        };
+
+        session.isApproved = status === "Accept" ? true : false
+
+        await session.save();
+
+        res
+        .status(200)
+        .json({
+            status: 'success',
+            message: "volunteer's response sent"
+        })
+
+    }catch(error){
+        res
+        .status(400)
+        .json({
+            status: "fail",
+            error: error.message
+        })
+    }
+};
 
 export {
     bookSession,
-    assignVolunteer
+    assignVolunteer,
+    volunteerResponse
 };

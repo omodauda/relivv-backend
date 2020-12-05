@@ -6,8 +6,11 @@ const passportJWT = passport.authenticate('jwt', {session: false});
 
 import {
     bookSession,
-    assignVolunteer
+    assignVolunteer,
+    volunteerResponse
 } from '../controllers/session';
+
+import {accessControl} from '../middlewares/index';
 
 router
     .route('/book')
@@ -17,8 +20,9 @@ router
     .route('/:id/assign-volunteer')
     .patch(assignVolunteer)
 
-
-
+router
+    .route('/:id/volunteer-response')
+    .patch(passportJWT, accessControl("Volunteer"), volunteerResponse)
 
 
 
