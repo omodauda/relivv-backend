@@ -254,7 +254,7 @@ const login = async(req, res) => {
 
         let profile;
 
-        if(role === 'User'){
+        if(role === 'User' || role === 'Admin'){
             profile = await User.findOne({authId: id}).select('-authId -__v')
         }else if(role === 'Volunteer'){
             profile = await Volunteer.findOne({authId: id}).select('-authId -__v');
