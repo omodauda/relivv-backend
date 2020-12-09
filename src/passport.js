@@ -82,12 +82,14 @@ passport.use(
 
             if(foundUser){
                 //merge google data with local auth
-                foundUser.methods.push('google');
-                foundUser.google = {
-                    id,
-                    email
-                };
-                await foundUser.save();
+                await Auth.findByIdAndUpdate(
+                    foundUser.id, 
+                    {
+                        $push: {methods: 'google'}, 
+                        'google.id': id, 
+                        'google.email': email
+                    }
+                )
                 return done(null, foundUser)
             };
 
