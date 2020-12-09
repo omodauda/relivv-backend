@@ -14,7 +14,7 @@ import {accessControl} from '../middlewares';
 import {validateBody, schemas} from '../validators';
 
 router
-    .route('/book')
+    .route('/book-session')
     .post(validateBody(schemas.bookSessionSchema), passportJWT, bookSession)
 
 router

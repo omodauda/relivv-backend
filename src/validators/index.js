@@ -21,7 +21,7 @@ const validateBody = (schema) => {
 const schemas = {
     userSchema: Joi.object().keys({
         email: Joi.string().email().required(),
-        password: Joi.string().required(),
+        password: Joi.string().min(5).required(),
         first_name: Joi.string().required(),
         last_name: Joi.string().required(),
         phone: Joi.string()
@@ -29,7 +29,7 @@ const schemas = {
 
     volunteerSchema: Joi.object().keys({
         email: Joi.string().email().required(),
-        password: Joi.string().required(),
+        password: Joi.string().min(5).required(),
         first_name: Joi.string().required(),
         last_name: Joi.string().required(),
         designation: Joi.string().required(),
