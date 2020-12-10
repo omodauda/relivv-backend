@@ -88,6 +88,16 @@ const assignVolunteer = async(req, res) => {
             })
         }
 
+        //check if Volunteer profile is Active
+        if(volunteer.status !== 'Active'){
+            return res
+            .status(400)
+            .json({
+                status: 'fail',
+                error: 'This volunteer is currently not active'
+            })
+        }
+
         /* 
             if session & volunteer are in db,
             assign volunteer id to session.volunteer &

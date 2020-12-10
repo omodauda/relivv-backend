@@ -11,7 +11,7 @@ const Volunteer = Profile.discriminator('Volunteer', new schema({
     status:{
         type: String,
         default: 'Reviewing',
-        enum: ["Reviewing", "Accepted", "Declined"]
+        enum: ["Reviewing", "Accepted", "Declined", "Suspended"]
     },
     first_name: {
         type: String,
