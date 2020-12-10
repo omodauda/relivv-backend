@@ -1,6 +1,35 @@
 import Volunteer from '../models/volunteer';
 import Auth from '../models/auth';
 
+const getAllVolunteers = async(req, res) => {
+    try{
+        const volunteers = await Volunteer.find();
+        if(volunteers.length === 0){
+            return res
+            .status(200)
+            .json({
+                status: 'success',
+                message: 'No volunteers in record'
+            })
+        }
+
+        res
+        .status(200)
+        .json({
+            status: 'success',
+            count: volunteers.length,
+            data: volunteers
+        })
+    }catch(error){
+        res
+        .status(400)
+        .json({
+            status: "fail",
+            error: error.message
+        })
+    }
+}
+
 const acceptVolunteer = async(req, res) => {
     try{
         const {id} = req.params;
@@ -123,6 +152,7 @@ const suspendVolunteer = async(req, res) => {
 };
 
 export {
+    getAllVolunteers,
     acceptVolunteer,
     declineVolunteer,
     suspendVolunteer

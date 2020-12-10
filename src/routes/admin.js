@@ -7,11 +7,16 @@ const passportJWT = passport.authenticate('jwt', {session: false});
 import {accessControl} from '../middlewares'
 
 import {
+    getAllVolunteers,
     acceptVolunteer,
     declineVolunteer,
     suspendVolunteer
 } from '../controllers/admin';
 
+
+router
+    .route('/volunteers')
+    .get(passportJWT, accessControl('Admin'), getAllVolunteers)
 
 router
     .route('/accept-volunteer/:id')
