@@ -234,6 +234,7 @@ const googleOauth = async(req, res) => {
             message: `${is_verified ? "" : "A verification link has been sent to your gmail, please verify your account"}`,
             data:{
                 token,
+                role,
                 profile
             }
         })
@@ -268,6 +269,7 @@ const login = async(req, res) => {
             message: "login successful",
             data: {
                 token,
+                role,
                 profile
             }
         })

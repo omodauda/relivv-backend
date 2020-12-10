@@ -1,5 +1,10 @@
 import express from 'express';
 const router = express.Router();
+import passport from 'passport';
+import passportConf from '../passport';
+const passportJWT = passport.authenticate('jwt', {session: false});
+
+import {accessControl} from '../middlewares'
 
 import {
     acceptVolunteer,
@@ -9,11 +14,11 @@ import {
 
 router
     .route('/accept-volunteer/:id')
-    .patch(acceptVolunteer)
+    .patch(passportJWT, accessControl('Admin'), acceptVolunteer)
 
 router
     .route('/decline-volunteer/:id')
-    .patch(declineVolunteer)
+    .patch(passportJWT, accessControl('Admin'), declineVolunteer)
 
 
 
