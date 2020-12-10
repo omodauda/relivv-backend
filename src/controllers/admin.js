@@ -91,7 +91,39 @@ const declineVolunteer = async(req, res) => {
     }
 };
 
+const suspendVolunteer = async(req, res) => {
+    try{
+        const {id} = req.params;
+        //check if a volunteer with id exists
+        const volunteer = await Volunteer.findById(id);
+        if(!volunteer){
+            return res
+            .status(400)
+            .json({
+                status: "fail",
+                message: `No volunteer with specified id found`
+            })
+        };
+        await Volunteer.findByIdAndUpdate(id, {status: "Suspended"});
+        res
+        .status(200)
+        .json({
+            status: 'success',
+            message: 'volunteer successfully suspended'
+        });
+
+    }catch(error){
+        res
+        .status(400)
+        .json({
+            status: "fail",
+            error: error.message
+        })
+    }
+};
+
 export {
     acceptVolunteer,
-    declineVolunteer
+    declineVolunteer,
+    suspendVolunteer
 };

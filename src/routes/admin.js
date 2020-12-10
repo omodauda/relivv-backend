@@ -8,7 +8,8 @@ import {accessControl} from '../middlewares'
 
 import {
     acceptVolunteer,
-    declineVolunteer
+    declineVolunteer,
+    suspendVolunteer
 } from '../controllers/admin';
 
 
@@ -20,7 +21,9 @@ router
     .route('/decline-volunteer/:id')
     .patch(passportJWT, accessControl('Admin'), declineVolunteer)
 
-
+router
+    .route('/suspend-volunteer/:id')
+    .patch(passportJWT, accessControl('Admin'), suspendVolunteer)
 
 
 export default router;
