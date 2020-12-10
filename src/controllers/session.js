@@ -77,6 +77,16 @@ const assignVolunteer = async(req, res) => {
                 error: `No session with id ${id} in record` 
             })
         }
+
+        //check if session has been previously assigned a volunteer
+        if(session.volunteer !== undefined || session.volunteer !== null){
+            return res
+            .status(400)
+            .json({
+                status: 'fail',
+                error: 'This session has already been assigned a volunteer'
+            })
+        }
         //check volunteer
         const volunteer = await Volunteer.findById(volunteer_id);
         if(!volunteer){
