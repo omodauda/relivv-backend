@@ -27,7 +27,7 @@ const uploadPhoto = async(req, res) => {
             .status(400)
             .json({
                 status: 'fail',
-                message: "profile not found!"
+                error: "profile not found"
             })
         }
         //upload image to cloudinary
@@ -71,7 +71,7 @@ const updateProfile = async(req, res) => {
             .status(400)
             .json({
                 status: 'fail',
-                message: 'No profile found'
+                error: 'No profile found'
             });
         };
 

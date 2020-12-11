@@ -41,7 +41,7 @@ const acceptVolunteer = async(req, res) => {
             .status(400)
             .json({
                 status: "fail",
-                message: `No volunteer with specified id found`
+                error: `No volunteer with specified id found`
             })
         };
 
@@ -66,7 +66,7 @@ const acceptVolunteer = async(req, res) => {
             .status(400)
             .json({
                 status: "fail",
-                message: 'volunteer is not email verified'
+                error: 'volunteer is not email verified'
             })
         }else if (isVerified === true){
             await Volunteer.findByIdAndUpdate(id, {status: "Accepted"});
@@ -99,7 +99,7 @@ const declineVolunteer = async(req, res) => {
             .status(400)
             .json({
                 status: "fail",
-                message: `No volunteer with specified id found`
+                error: `No volunteer with specified id found`
             })
         };
 
@@ -130,7 +130,7 @@ const suspendVolunteer = async(req, res) => {
             .status(400)
             .json({
                 status: "fail",
-                message: `No volunteer with specified id found`
+                error: `No volunteer with specified id found`
             })
         };
         await Volunteer.findByIdAndUpdate(id, {status: "Suspended"});

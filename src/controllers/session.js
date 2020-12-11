@@ -151,7 +151,7 @@ const volunteerResponse = async(req, res) => {
             .status(400)
             .json({
                 status: 'fail',
-                message: `No session with id ${id} in record`
+                error: `No session with id ${id} in record`
             })
         }
 
@@ -163,10 +163,10 @@ const volunteerResponse = async(req, res) => {
 
         if(session.volunteer != volunteer.id){
             return res
-            .status(400)
+            .status(403)
             .json({
                 status: 'fail',
-                message: "You don't have permission to perform this operation"
+                error: "You don't have permission to perform this operation"
             })
         }
 

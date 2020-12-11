@@ -33,10 +33,10 @@ const registerUser = async(req, res) => {
         let foundUser = await Auth.findOne({'local.email': email});
         if(foundUser){
             return res
-            .status(403)
+            .status(400)
             .json({
                 status: "fail",
-                message: `Email ${email} already in use`
+                error: `Email ${email} already in use`
             });
         }
 
@@ -57,7 +57,7 @@ const registerUser = async(req, res) => {
             .status(201)
             .json({
                 status: "success",
-                message: "user successfully created"
+                message: "user successfully registered"
             })
         };
 
@@ -88,7 +88,7 @@ const registerUser = async(req, res) => {
         .status(201)
         .json({
             status: "success",
-            message: "user successfully created"
+            message: "user successfully registered"
         })
     }catch(error){
         res
@@ -122,10 +122,10 @@ const registerVolunteer = async(req, res) => {
         let foundUser = await Auth.findOne({'local.email': email});
         if(foundUser){
             return res
-            .status(403)
+            .status(400)
             .json({
                 status: "fail",
-                message: `Email ${email} already in use`
+                error: `Email ${email} already in use`
             });
         };
 
@@ -170,7 +170,7 @@ const registerVolunteer = async(req, res) => {
         .status(201)
         .json({
             status: "success",
-            message: "volunteer successfully created"
+            message: "volunteer successfully registered"
         })
     }catch(error){
         res
@@ -192,7 +192,7 @@ const verifyUser = async(req, res) => {
             .status(400)
             .json({
                 status: "fail",
-                message: `user with email ${email} not registered`
+                error: `user with email ${email} not registered`
             })
         }
 
