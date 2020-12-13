@@ -8,6 +8,7 @@ import JWT from 'jsonwebtoken';
 
 //utils
 import {sendVerificationEmail} from '../utils/email';
+import {uploadFile} from '../utils/cloudinary';
 import { async } from 'regenerator-runtime';
 
 //sign user with token
@@ -32,10 +33,10 @@ const registerUser = async(req, res) => {
         let foundUser = await Auth.findOne({'local.email': email});
         if(foundUser){
             return res
-            .status(403)
+            .status(400)
             .json({
                 status: "fail",
-                message: `Email ${email} already in use`
+                error: `Email ${email} already in use`
             });
         }
 
@@ -56,7 +57,7 @@ const registerUser = async(req, res) => {
             .status(201)
             .json({
                 status: "success",
-                message: "user successfully created"
+                message: "user successfully registered"
             })
         };
 
@@ -87,7 +88,7 @@ const registerUser = async(req, res) => {
         .status(201)
         .json({
             status: "success",
-            message: "user successfully created"
+            message: "user successfully registered"
         })
     }catch(error){
         res
@@ -101,10 +102,37 @@ const registerUser = async(req, res) => {
 
 const registerVolunteer = async(req, res) => {
     try{
+
+        //return if no file selected
+        if (!req.file){
+            return res
+            .status(400)
+            .json({
+                status: 'fail',
+                error: 'volunteer must provide a certification'
+            });
+        };
+
         const {
             email, password, first_name, last_name, designation,
             gender, experience_year, professional_career, education_level, phone
         } = req.body;
+
+        //check if there's a user with same email
+        let foundUser = await Auth.findOne({'local.email': email});
+        if(foundUser){
+            return res
+            .status(400)
+            .json({
+                status: "fail",
+                error: `Email ${email} already in use`
+            });
+        };
+
+        //new volunteer
+            //upload certificate to cloudinary
+        const file = await  uploadFile(req.file);
+        const {public_id, secure_url} = file;
 
         const newUser = new Auth({
             methods: ["local"],
@@ -126,6 +154,10 @@ const registerVolunteer = async(req, res) => {
             experience_year,
             professional_career,
             education_level,
+            certificate: {
+                url: secure_url,
+                public_id
+            },
             phone
         });
 
@@ -138,7 +170,7 @@ const registerVolunteer = async(req, res) => {
         .status(201)
         .json({
             status: "success",
-            message: "volunteer successfully created"
+            message: "volunteer successfully registered"
         })
     }catch(error){
         res
@@ -160,7 +192,7 @@ const verifyUser = async(req, res) => {
             .status(400)
             .json({
                 status: "fail",
-                message: `user with email ${email} not registered`
+                error: `user with email ${email} not registered`
             })
         }
 
@@ -202,6 +234,7 @@ const googleOauth = async(req, res) => {
             message: `${is_verified ? "" : "A verification link has been sent to your gmail, please verify your account"}`,
             data:{
                 token,
+                role,
                 profile
             }
         })
@@ -222,10 +255,10 @@ const login = async(req, res) => {
 
         let profile;
 
-        if(role === 'User'){
-            profile = await User.findOne({authId: id}).select('-authId -__v')
-        }else if(role === 'Volunteer'){
+        if(role === 'Volunteer'){
             profile = await Volunteer.findOne({authId: id}).select('-authId -__v');
+        }else{
+            profile = await User.findOne({authId: id}).select('-authId -__v')
         }
 
         const token = signToken(req.user);
@@ -236,6 +269,7 @@ const login = async(req, res) => {
             message: "login successful",
             data: {
                 token,
+                role,
                 profile
             }
         })

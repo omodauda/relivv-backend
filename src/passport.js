@@ -11,6 +11,27 @@ import config from './config';
 import {sendVerificationEmail} from './utils/email';
 
 
+passport.use(new JwtStrategy(
+    {
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        secretOrKey: config.jwtSecret
+    },
+    async(payload, done) => {
+        //find user specified in token
+        try{
+            const user = await Auth.findById(payload.sub);
+            //if !user return
+            if(!user){
+                return done(null, false);
+            }
+            //if user, send user
+            done(null, user)
+        }catch(error){
+            return done(new Error('Unauthorized to perform this action'), false)
+        }
+    }
+));
+
 //local strategy
 passport.use(new LocalStrategy(
     {
@@ -61,12 +82,14 @@ passport.use(
 
             if(foundUser){
                 //merge google data with local auth
-                foundUser.methods.push('google');
-                foundUser.google = {
-                    id,
-                    email
-                };
-                await foundUser.save();
+                await Auth.findByIdAndUpdate(
+                    foundUser.id, 
+                    {
+                        $push: {methods: 'google'}, 
+                        'google.id': id, 
+                        'google.email': email
+                    }
+                )
                 return done(null, foundUser)
             };
 

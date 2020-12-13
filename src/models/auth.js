@@ -35,7 +35,7 @@ const authSchema = new schema({
     role: {
         type: String,
         default: "User",
-        enum: ["User", "Volunteer", "Admin"]
+        enum: ["User", "Volunteer", "Admin", "SuperAdmin"]
     },
     is_verified: {
         type: Boolean,
