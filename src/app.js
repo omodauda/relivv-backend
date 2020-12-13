@@ -11,6 +11,10 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: false}))
 
+app.get('/api/v1/docs', (req, res) => {
+  res.redirect('https://documenter.getpostman.com/view/11291043/TVsoGAR8')
+});
+
 
 app.use('/api/v1/users', auth);
 app.use('/api/v1/admin', admin);
