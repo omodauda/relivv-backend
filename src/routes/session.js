@@ -15,11 +15,11 @@ import {validateBody, schemas} from '../validators';
 
 router
     .route('/book-session')
-    .post(validateBody(schemas.bookSessionSchema), passportJWT, bookSession)
+    .post(validateBody(schemas.bookSessionSchema), passportJWT, accessControl('User', 'Admin'), bookSession)
 
 router
     .route('/:id/assign-volunteer')
-    .patch(validateBody(schemas.assignVolunteer), assignVolunteer)
+    .patch(validateBody(schemas.assignVolunteer), accessControl('Admin', 'SuperAdmin'), assignVolunteer)
 
 router
     .route('/:id/volunteer-response')
