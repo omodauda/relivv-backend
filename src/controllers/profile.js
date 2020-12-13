@@ -19,7 +19,7 @@ const uploadPhoto = async(req, res) => {
         const {id, role} = req.user;
 
         //get the profile
-        const profileType = role === 'Volunteer' ? Volunteer : role === 'User' || role === 'Admin' ? User : null;
+        const profileType = role === 'Volunteer' ? Volunteer : User;
         
         let profile = await profileType.findOne({authId: id});
         if(!profile){
@@ -62,7 +62,7 @@ const updateProfile = async(req, res) => {
     try{
         const {id, role} = req.user;
         //get the profile
-        const profileType = role === 'Volunteer' ? Volunteer : role === 'User' || role === 'Admin' ? User : null;
+        const profileType = role === 'Volunteer' ? Volunteer : User;
 
         const profile = await profileType.findOne({authId: id});
         

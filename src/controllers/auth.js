@@ -255,10 +255,10 @@ const login = async(req, res) => {
 
         let profile;
 
-        if(role === 'User' || role === 'Admin'){
-            profile = await User.findOne({authId: id}).select('-authId -__v')
-        }else if(role === 'Volunteer'){
+        if(role === 'Volunteer'){
             profile = await Volunteer.findOne({authId: id}).select('-authId -__v');
+        }else{
+            profile = await User.findOne({authId: id}).select('-authId -__v')
         }
 
         const token = signToken(req.user);

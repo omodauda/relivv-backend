@@ -24,7 +24,8 @@ const schemas = {
         password: Joi.string().min(5).required(),
         first_name: Joi.string().required(),
         last_name: Joi.string().required(),
-        phone: Joi.string()
+        phone: Joi.string(),
+        role: Joi.string()
     }),
 
     volunteerSchema: Joi.object().keys({
