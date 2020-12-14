@@ -45,11 +45,11 @@ const sendVerificationEmail = async(email) => {
         const subject = "Welcome to Relivv! Please Confirm Your Email";
         const html = `
             <div>
-                <h5>Welcome to Relivv. A community that cares about your mental health.</h5>
-                <h5>click on this link to verify your email: <a href="${link}">verify me</a></h5>
-                <h5>You can now login to read amazing tips on mental health or book a session with available volunteers.</h5>
-                <h5>Best regards,</h5>
-                <h5>Relivv</h5>
+                <h2>Welcome to Relivv. A community that cares about your mental health.</h2>
+                <h3>click on this link to verify your email: <a href="${link}">verify me</a></h3>
+                <h4>You can now login to read amazing tips on mental health or book a session with available volunteers.</h4>
+                <h4>Best regards,</h4>
+                <h4>Relivv</h4>
             </div>
         `
         await sendMail({receipient, subject, html});
@@ -57,6 +57,24 @@ const sendVerificationEmail = async(email) => {
     }catch(error){
         return error;
     }
+};
+
+const sendResetPasswordEmail = async(email, id, token) => {
+    try{
+        const link = `${hostURL}/api/v1/users/${id}/reset/${token}`;
+        const receipient = email;
+        const subject = "Password reset request email";
+        const html = `
+            <h3>Please click the link to proceed to resetting your password:</h3>
+            <a href="${link}">Reset my password</a>
+        `;
+        await sendMail({receipient, subject, html});
+    }catch(error){
+        return error;
+    }
 }
 
-export {sendVerificationEmail}
+export {
+    sendVerificationEmail,
+    sendResetPasswordEmail
+}
