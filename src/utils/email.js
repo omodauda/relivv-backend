@@ -61,7 +61,7 @@ const sendVerificationEmail = async(email) => {
 
 const sendResetPasswordEmail = async(email, id, token) => {
     try{
-        const link = `${hostURL}/api/v1/users/${id}/reset/${token}`;
+        const link = `${hostURL}/api/v1/users/${id}/reset-password/${token}`;
         const receipient = email;
         const subject = "Password reset request email";
         const html = `

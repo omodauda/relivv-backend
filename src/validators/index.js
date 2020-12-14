@@ -67,6 +67,10 @@ const schemas = {
     volunteerResponseSchema: Joi.object().keys({
         status: Joi.string().valid('Accept', 'Decline', 'Reschedule').required(),
         message: Joi.string()
+    }),
+
+    resetPassword: Joi.object().keys({
+        newPassword: Joi.string().required()
     })
 }
 
