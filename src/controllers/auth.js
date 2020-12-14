@@ -7,7 +7,7 @@ import config from '../config';
 import JWT from 'jsonwebtoken';
 
 //utils
-import {sendVerificationEmail} from '../utils/email';
+import {sendVerificationEmail, sendResetPasswordEmail} from '../utils/email';
 import {uploadFile} from '../utils/cloudinary';
 import { async } from 'regenerator-runtime';
 
@@ -281,6 +281,40 @@ const login = async(req, res) => {
             error: error.message
         })
     }
+};
+
+const forgetPassword = async(req, res) => {
+    try{
+        const {email} = req.body;
+        const account = await Auth.findOne({$or: [{'local.email': email}, {'google.email': email}]});
+        if(!account){
+            return res
+            .status(400)
+            .json({
+                status: 'fail',
+                error: `E-mail ${email} not associated with any account`
+            });
+        };
+
+        const token = signToken(account);
+
+        await sendResetPasswordEmail(email, account.id, token);
+
+        res
+        .status(200)
+        .json({
+            status: 'success',
+            message: "A reset link has been sent to your email"
+        })
+
+    }catch(error){
+        res
+        .status(400)
+        .json({
+            status: "fail",
+            error: error.message
+        })
+    }
 }
 
 
@@ -289,5 +323,6 @@ export {
     registerVolunteer, 
     verifyUser, 
     googleOauth,
-    login
+    login,
+    forgetPassword
 }

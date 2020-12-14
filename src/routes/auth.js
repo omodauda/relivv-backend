@@ -13,7 +13,8 @@ import {
     registerVolunteer, 
     verifyUser,
     googleOauth,
-    login
+    login,
+    forgetPassword
 } from '../controllers/auth'
 
 router
@@ -35,6 +36,10 @@ router
 router
     .route('/login')
     .post(validateBody(schemas.loginSchema), passportLogin, login)
+
+router
+    .route('/forget-password')
+    .post(forgetPassword)
 
 
 
