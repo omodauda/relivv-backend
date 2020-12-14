@@ -7,7 +7,7 @@ import config from '../config';
 import JWT from 'jsonwebtoken';
 
 //utils
-import {sendVerificationEmail} from '../utils/email';
+import {sendVerificationEmail, sendResetPasswordEmail} from '../utils/email';
 import {uploadFile} from '../utils/cloudinary';
 import { async } from 'regenerator-runtime';
 
@@ -281,6 +281,101 @@ const login = async(req, res) => {
             error: error.message
         })
     }
+};
+
+const forgetPassword = async(req, res) => {
+    try{
+        const {email} = req.body;
+        const account = await Auth.findOne({$or: [{'local.email': email}, {'google.email': email}]});
+        if(!account){
+            return res
+            .status(400)
+            .json({
+                status: 'fail',
+                error: `E-mail ${email} not associated with any account`
+            });
+        };
+
+        const token = signToken(account);
+
+        await sendResetPasswordEmail(email, account.id, token);
+
+        res
+        .status(200)
+        .json({
+            status: 'success',
+            message: "A reset link has been sent to your email"
+        })
+
+    }catch(error){
+        res
+        .status(400)
+        .json({
+            status: "fail",
+            error: error.message
+        })
+    }
+};
+
+const resetPassword = async(req, res) => {
+    try{
+        const {id, token} = req.params;
+        const {newPassword} = req.body;
+        //find account by id
+        const account = await Auth.findById(id);
+        if(!account){
+            return res
+            .status(400)
+            .json({
+                status: 'fail',
+                error: 'account does not exist'
+            })
+        };
+        const decoded = JWT.verify(token, config.jwtSecret);
+        
+        if(account.id !== decoded.sub){
+            return res
+            .status(400)
+            .json({
+                status: 'fail',
+                error: 'Invalid token'
+            })
+        }
+        if(!account.methods.includes('local')){
+            
+            account.methods.push('local');
+            account.local = {
+                email: account.google.email,
+                password: newPassword
+            };
+            await account.save();
+
+            return res
+            .status(200)
+            .json({
+                status: 'success',
+                message: 'Password reset successful, proceed to login'
+            })
+        }
+        //account which include local as methods
+        account.local.password = newPassword;
+        await account.save();
+
+        res
+        .status(200)
+        .json({
+            status: 'success',
+            message: 'Password reset successful, proceed to login'
+        })
+
+    }catch(error){
+        res
+        .status(400)
+        .json({
+            status: "fail",
+            error: error.message
+        })
+    }
 }
 
 
@@ -289,5 +384,7 @@ export {
     registerVolunteer, 
     verifyUser, 
     googleOauth,
-    login
+    login,
+    forgetPassword,
+    resetPassword
 }
